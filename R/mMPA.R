@@ -9,7 +9,6 @@
 #' @section  functions:
 #' The foo functions ...
 #'
-#'
 #' @docType package
 #' @name mMPA
 NULL
