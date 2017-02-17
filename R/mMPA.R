@@ -6,9 +6,19 @@
 #'
 #' Add some details hers (take from paper abstract)
 #'
-#' @section  functions:
+#' @section Functions:
 #' The foo functions ...
+#'
+#'  The latest version of the package is available at GitHub. It can be
+#'  installed using the command
+#'  \code{devtools::install_github("taotliu/mMPA")}
 #'
 #' @docType package
 #' @name mMPA
+#'
+#' @examples
+#'  ## To install the package from GitHub
+#'  install.packages("devtools")
+#'  devtools::install_github("taotliu/mMPA")
+#'  library(mMPA)
 NULL
