@@ -4,42 +4,54 @@
 \alias{mmpa0}
 \title{Number of Assays Needed using Marker-Assisted Mini-Pooling with Algorithm}
 \usage{
-mmpa0(v, s, K = 5, vf_cut = 500, lod = 0)
+mmpa0(v, s, K = 5, vf_cut = 1000, lod = 0, msg = T)
 }
 \arguments{
-\item{v}{Vector of numerical assay results.}
+\item{v}{A vector of numerical assay results.}
 
-\item{s}{Vector of risk score with the same length of viral load.}
+\item{s}{A vector of risk scores with the same length of \code{v}.}
 
-\item{K}{Pool size, default is \code{K=5}.}
+\item{K}{Pool size; default is \code{K = 5}.}
 
-\item{vf_cut}{Cutoff for defining disease positive, default is \code{vf_cut = 1000}.}
+\item{vf_cut}{Cutoff value for defining positive cases;
+default is \code{vf_cut = 1000}.}
 
-\item{lod}{Vector of lower limited of detection, default is \code{lod = 0}.}
+\item{lod}{A vector of lower limits of detection or a scalar if the limits are the
+same; default is \code{lod = 0}.}
+
+\item{msg}{Message generated during calculation.}
 }
 \value{
 A vectorof length \code{N\%/\%K} for the numbers of assays needed for all pools
 that are formed.
 }
 \description{
-Function \code{mmpa0} calculates the number of assays when using mMPA.
-The pools are formed following the order of individual samples in the data.
+Function \code{mmpa0} calculates the number of assays, when using mMPA, for
+pools that are formed following the order of individual samples in the data.
 }
 \details{
 For a pool size of \code{K}, the first \code{K} samples are combined to
 form a pool, the next \code{K} samples are combined to form the second
 pool, and so on. If the number of samples for the last pool is less than
-\code{K}, these samples are not used to form a pool (i.e. not included)
-in the calculation. Therefore for \code{N} samples, a total of
+\code{K}, these remaining samples are not used to form a pool (i.e.
+not included
+in the calculation) . Therefore for \code{N} samples, a total of
 \code{N\%/\%K} pools are formed. The function calculates the number of
-assays needed for each pool.
+assays needed for each of these pools.
 }
 \examples{
-d = Simdata
-V = d$VL # Viral Load
-S = d$S # Risk Score
-mmpa(V, S, K = 3, perm_num = 3)
-foo; table(foo)
-
+K=5; n = 50;
+n.pool  = n/K; n.pool
+> [1] 10
+set.seed(100)
+pvl = rgamma(n, shape = 2.8, scale = 150)
+riskscore = (rank(pvl)/n) * 0.5 + runif(n) * 0.5
+mmpa0(v = pvl, s = riskscore)
+> A total of 10 pools are formed.
+> The numbers of assays needed by these pools are:
+> [1] 3 3 4 4 2 3 3 4 3 3
 }
-\keyword{Pooling.}
+\seealso{
+\link{mmpa}
+}
+\keyword{mMPA.}

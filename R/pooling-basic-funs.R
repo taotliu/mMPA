@@ -12,7 +12,6 @@
 #' @param vf_cut Cutoff for defining disease positive, default is \code{vf_cut = 1000}.
 #' @param lod Vector of lower limited of detection, default is \code{lod = 0}.
 #' @param perm_num The number of permutation to be used for the calculation, default is 100.
-#' @param msg Message generated during calculation.
 #' @return
 #' The average number of assays needed per pool and per subject.
 #' @keywords Pooling.
@@ -55,53 +54,74 @@ mmpa = function(v, # vector of true VL
 
 
 
+
 #' Number of Assays Needed using Marker-Assisted Mini-Pooling with Algorithm
 
 #'
-#' Function \code{mmpa0} calculates the number of assays when using mMPA.
-#' The pools are formed following the order of individual samples in the data.
+#' Function \code{mmpa0} calculates the number of assays, when using mMPA, for
+#' pools that are formed following the order of individual samples in the data.
 #'
 #' For a pool size of \code{K}, the first \code{K} samples are combined to
 #' form a pool, the next \code{K} samples are combined to form the second
 #' pool, and so on. If the number of samples for the last pool is less than
-#' \code{K}, these samples are not used to form a pool (i.e. not included)
-#' in the calculation. Therefore for \code{N} samples, a total of
+#' \code{K}, these remaining samples are not used to form a pool (i.e.
+#' not included
+#' in the calculation) . Therefore for \code{N} samples, a total of
 #' \code{N\%/\%K} pools are formed. The function calculates the number of
-#' assays needed for each pool.
+#' assays needed for each of these pools.
 #'
-#' @param v Vector of numerical assay results.
-#' @param s Vector of risk score with the same length of viral load.
-#' @param K Pool size, default is \code{K=5}.
-#' @param vf_cut Cutoff for defining disease positive, default is \code{vf_cut = 1000}.
-#' @param lod Vector of lower limited of detection, default is \code{lod = 0}.
+#' @param v A vector of numerical assay results.
+#' @param s A vector of risk scores with the same length of \code{v}.
+#' @param K Pool size; default is \code{K = 5}.
+#' @param vf_cut Cutoff value for defining positive cases;
+#' default is \code{vf_cut = 1000}.
+#' @param lod A vector of lower limits of detection or a scalar if the limits are the
+#' same; default is \code{lod = 0}.
+#' @param msg Message generated during calculation.
+#'
 #' @return
 #' A vectorof length \code{N\%/\%K} for the numbers of assays needed for all pools
 #' that are formed.
-#' @keywords Pooling.
+#' @keywords mMPA.
+#' @seealso \link{mmpa}
 #' @export
 #' @examples
-#' d = Simdata
-#' V = d$VL # Viral Load
-#' S = d$S # Risk Score
-#' mmpa(V, S, K = 3, perm_num = 3)
-#' foo; table(foo)
-#'
+#' K=5; n = 50;
+#' n.pool  = n/K; n.pool
+#' > [1] 10
+#' set.seed(100)
+#' pvl = rgamma(n, shape = 2.8, scale = 150)
+#' riskscore = (rank(pvl)/n) * 0.5 + runif(n) * 0.5
+#' mmpa0(v = pvl, s = riskscore)
+#' > A total of 10 pools are formed.
+#' > The numbers of assays needed by these pools are:
+#' > [1] 3 3 4 4 2 3 3 4 3 3
+
 mmpa0 = function(
-  v, # vector of VL
-  s, # vector of risk score in same length
-  K = 5, # pool size
-  vf_cut = 500, # cutoff for individual viral failure
-  lod = 0 # vector of true VL of those undetectable
+  v,
+  s,
+  K = 5,
+  vf_cut = 1000,
+  lod = 0,
+  msg = T
 ){
   n = length(v)
   if (length(s) != n) {
-    warning("V and S have different length!")
+    warning("v and s have different length!")
     n = min(n, length(s))
+  }
+  if (sum(c(is.na(v), is.na(s)))>0) {
+    stop("v or s contains missing value!")
   }
   num_pool = n %/% K
   foo0 = n - num_pool*K
+  if(msg) {
+    cat("A total of", num_pool, "pools are formed.\n")
+    cat("The numbers of assays needed by these pools are: \n")
+  }
   if(foo0 !=0) {
-    #warning("Last (", foo0, ") observation(s) are dropped to make (", num_pool, ") pools!")
+    if(msg)
+      warning("The last ", foo0, " samples(s) are dropped to make the ", num_pool, " pools!")
     v = v[1:(num_pool*K)]
     s = s[1:(num_pool*K)]
   }
