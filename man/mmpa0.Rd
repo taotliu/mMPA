@@ -2,7 +2,7 @@
 % Please edit documentation in R/pooling-basic-funs.R
 \name{mmpa0}
 \alias{mmpa0}
-\title{Number of Assays Need for Marker-Assisted Mini-Pooling with Algorithm}
+\title{Number of Assays Needed using Marker-Assisted Mini-Pooling with Algorithm}
 \usage{
 mmpa0(v, s, K = 5, vf_cut = 500, lod = 0)
 }
@@ -18,14 +18,21 @@ mmpa0(v, s, K = 5, vf_cut = 500, lod = 0)
 \item{lod}{Vector of lower limited of detection, default is \code{lod = 0}.}
 }
 \value{
-The average number of assays needed per pool and per subject.
+A vectorof length \code{N\%/\%K} for the numbers of assays needed for all pools
+that are formed.
 }
 \description{
-This function uses Monte Carlo to compute the average number of assays
-needed per pool using mMPA.
+Function \code{mmpa0} calculates the number of assays when using mMPA.
+The pools are formed following the order of individual samples in the data.
 }
 \details{
-alksdf detials
+For a pool size of \code{K}, the first \code{K} samples are combined to
+form a pool, the next \code{K} samples are combined to form the second
+pool, and so on. If the number of samples for the last pool is less than
+\code{K}, these samples are not used to form a pool (i.e. not included)
+in the calculation. Therefore for \code{N} samples, a total of
+\code{N\%/\%K} pools are formed. The function calculates the number of
+assays needed for each pool.
 }
 \examples{
 d = Simdata
@@ -33,5 +40,6 @@ V = d$VL # Viral Load
 S = d$S # Risk Score
 mmpa(V, S, K = 3, perm_num = 3)
 foo; table(foo)
+
 }
 \keyword{Pooling.}

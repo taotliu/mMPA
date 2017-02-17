@@ -55,12 +55,19 @@ mmpa = function(v, # vector of true VL
 
 
 
-#' Number of Assays Need for Marker-Assisted Mini-Pooling with Algorithm
+#' Number of Assays Needed using Marker-Assisted Mini-Pooling with Algorithm
+
 #'
-#' This function uses Monte Carlo to compute the average number of assays
-#' needed per pool using mMPA.
+#' Function \code{mmpa0} calculates the number of assays when using mMPA.
+#' The pools are formed following the order of individual samples in the data.
 #'
-#' alksdf detials
+#' For a pool size of \code{K}, the first \code{K} samples are combined to
+#' form a pool, the next \code{K} samples are combined to form the second
+#' pool, and so on. If the number of samples for the last pool is less than
+#' \code{K}, these samples are not used to form a pool (i.e. not included)
+#' in the calculation. Therefore for \code{N} samples, a total of
+#' \code{N\%/\%K} pools are formed. The function calculates the number of
+#' assays needed for each pool.
 #'
 #' @param v Vector of numerical assay results.
 #' @param s Vector of risk score with the same length of viral load.
@@ -68,7 +75,8 @@ mmpa = function(v, # vector of true VL
 #' @param vf_cut Cutoff for defining disease positive, default is \code{vf_cut = 1000}.
 #' @param lod Vector of lower limited of detection, default is \code{lod = 0}.
 #' @return
-#' The average number of assays needed per pool and per subject.
+#' A vectorof length \code{N\%/\%K} for the numbers of assays needed for all pools
+#' that are formed.
 #' @keywords Pooling.
 #' @export
 #' @examples
@@ -77,7 +85,7 @@ mmpa = function(v, # vector of true VL
 #' S = d$S # Risk Score
 #' mmpa(V, S, K = 3, perm_num = 3)
 #' foo; table(foo)
-
+#'
 mmpa0 = function(
   v, # vector of VL
   s, # vector of risk score in same length
