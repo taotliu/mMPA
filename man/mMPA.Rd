@@ -2,34 +2,51 @@
 % Please edit documentation in R/pooling-basic-funs.R
 \name{mmpa}
 \alias{mmpa}
-\title{Number of Assays Need for Marker-Assisted Mini-Pooling with Algorithm}
+\title{Monte Carlo Simulation for Estimating the Number of Assays Needed
+when Using mMPA}
 \usage{
-mmpa(v, s, K = 5, vf_cut = 500, lod = 0, perm_num = 100, msg = T)
+mmpa(v, s, K = 5, vf_cut = 1000, lod = 0, perm_num = 100, msg = F)
 }
 \arguments{
-\item{v}{Vector of numerical assay results.}
+\item{v}{A vector of numerical assay results.}
 
-\item{s}{Vector of risk score with the same length of viral load.}
+\item{s}{A vector of risk scores with the same length of \code{v}.}
 
-\item{K}{Pool size, default is \code{K=5}.}
+\item{K}{Pool size; default is \code{K = 5}.}
 
-\item{vf_cut}{Cutoff for defining disease positive, default is \code{vf_cut = 1000}.}
+\item{vf_cut}{Cutoff value for defining positive cases;
+default is \code{vf_cut = 1000}.}
 
-\item{lod}{Vector of lower limited of detection, default is \code{lod = 0}.}
+\item{lod}{A vector of lower limits of detection or a scalar if the limits are the
+same; default is \code{lod = 0}.}
 
-\item{perm_num}{The number of permutation to be used for the calculation, default is 100.}
+\item{perm_num}{The number of permutation to be used for the calculation;
+default is \code{100}.}
 
-\item{msg}{Message generated during calculation.}
+\item{msg}{Message generated during calculation; default is \code{FALSE}.}
 }
 \value{
-The average number of assays needed per pool and per subject.
+The outcome is a matrix of dimension \code{num_pool} by \code{perm_num}.
+The row number is the number of pools (\code{num_pool}) for each permutation,
+which is
+determined by the sample size \code{N} and pool size \code{K}; \code{num_pool
+= N\%/\%K}. The column number is the number of
+permutations (\code{num_pool}).
 }
 \description{
-This function uses Monte Carlo to compute the average number of assays
-needed per pool using mMPA.
+This function uses Monte Carlo to simulate different orders in
+which the samples would be collected to form pools. Unlike the
+function \code{mmpa0} which calculates the number of assays
+needed for pools that are formed following the exact order
+of the samples that are listed in the data, the function
+\code{mmp} permutes the data many (\code{perm_num}) times
+and thus can be used to estimate the average number of
+assays required (ATR) per individual without depending on a
+specific configuration of forming pools. To obtain a reliable
+estimate of ATR, a large number of \code{perm_num} should be used.
 }
 \details{
-alksdf detials
+See \link{mmpa0} for detail descriptions
 }
 \examples{
 d = Simdata
@@ -37,5 +54,8 @@ V = d$VL # Viral Load
 S = d$S # Risk Score
 mmpa(V, S, K = 3, perm_num = 3)
 foo; table(foo)
+}
+\seealso{
+\link{mmpa0}
 }
 \keyword{Pooling.}

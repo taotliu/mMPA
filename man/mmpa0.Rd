@@ -19,7 +19,7 @@ default is \code{vf_cut = 1000}.}
 \item{lod}{A vector of lower limits of detection or a scalar if the limits are the
 same; default is \code{lod = 0}.}
 
-\item{msg}{Message generated during calculation.}
+\item{msg}{Message generated during calculation; default is \code{TRUE}.}
 }
 \value{
 A vectorof length \code{N\%/\%K} for the numbers of assays needed for all pools
