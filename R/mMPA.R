@@ -4,7 +4,7 @@
 #' The \code{mMPA} package provides three categories of important functions:
 #' foo, bar and baz.
 #'
-#' Add some details hers (take from paper abstract)
+#' Add some details here (take from paper abstract)
 #'
 #' @section Functions:
 #' The foo functions ...
