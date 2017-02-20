@@ -59,7 +59,7 @@ The average number of VL tests needed per individual is `0.67`.
 > mean(foo)/K
  [1] 0.67
 ``` 
-So The average number of VL tests needed per 100 individuals (ATR) is 67.  
+So the average number of VL tests needed per 100 individuals (ATR) is 67.  
 
 
 
