@@ -2,10 +2,10 @@ Package: mMPA
 Type: Package
 Title: Implementation of Marker-Assisted Mini-Pooling with Algorithm 
 Version: 0.1.0
-Author@R: as.person(c(
-    "Tao Liu <tliu@stat.brown.edu> [aut, cre]", 
-    "Yizhen Xu <yizhen_xu@brown.edu> [aut]"))
-Maintainer: The package maintainer <yourself@somewhere.net>
+Author@R: c(
+    person("Tao", "Liu", email = "tliu@stat.brown.edu", role = "aut, cre"),
+    person("Yizhen", "Xu", email = "yizhen_xu@brown.edu", role = "aut"))
+Maintainer: Tao Liu <tliu@stat.brown.edu>
 Description: to be added (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
     add more description 
