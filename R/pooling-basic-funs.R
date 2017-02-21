@@ -36,7 +36,7 @@
 #' foo; table(foo)
 
 
-mmpa = function(v, # vector of true VL
+pooling_mc = function(v, # vector of true VL
                 s, # vector of risk score in same length
                 K = 5, # pool size
                 vf_cut = 1000, # cutoff for individual viral failure
@@ -68,28 +68,22 @@ mmpa = function(v, # vector of true VL
 
 
 #' Number of Assays Needed using Marker-Assisted Mini-Pooling with Algorithm
-
 #'
 #' Function \code{mmpa0} calculates the number of assays, when using mMPA, for
 #' pools that are formed following the order of individual samples in the data.
 #'
-#' For a pool size of \code{K}, the first \code{K} samples are combined to
+#' For a given sample (v_i, s_i), i = 1, ..., N, the first \code{K} samples are combined to
 #' form a pool, the next \code{K} samples are combined to form the second
 #' pool, and so on. If the number of samples for the last pool is less than
 #' \code{K}, these remaining samples are not used to form a pool (i.e.
 #' not included
-#' in the calculation) . Therefore for \code{N} samples, a total of
+#' in the calculation) . Therefore, a total of
 #' \code{N\%/\%K} pools are formed. The function calculates the number of
 #' assays needed for each of these pools.
 #'
-#' @param v A vector of numerical assay results.
-#' @param s A vector of risk scores with the same length of \code{v}.
-#' @param K Pool size; default is \code{K = 5}.
-#' @param vf_cut Cutoff value for defining positive cases;
-#' default is \code{vf_cut = 1000}.
-#' @param lod A vector of lower limits of detection or a scalar if the limits are the
-#' same; default is \code{lod = 0}.
-#' @param msg Message generated during calculation; default is \code{TRUE}.
+#' @inheritParams mpa0
+#' @param s A vector of risk scores; \code{v} and \code{s} must have the same
+#' length.
 #'
 #' @return
 #' A vectorof length \code{N\%/\%K} for the numbers of assays needed for all pools
@@ -106,10 +100,10 @@ mmpa = function(v, # vector of true VL
 #' riskscore = (rank(pvl)/n) * 0.5 + runif(n) * 0.5
 #' mmpa0(v = pvl, s = riskscore)
 #' > A total of 10 pools are formed.
-#' > The numbers of assays needed by these pools are:
+#' > The numbers of assays required by these pools are:
 #' > [1] 3 3 4 4 2 3 3 4 3 3
-
-mmpa0 = function(
+#'
+mmpa = function(
   v,
   s,
   K = 5,
@@ -129,7 +123,7 @@ mmpa0 = function(
   foo0 = n - num_pool*K
   if(msg) {
     cat("A total of", num_pool, "pools are formed.\n")
-    cat("The numbers of assays needed by these pools are: \n")
+    cat("The numbers of assays required by these pools are: \n")
   }
   if(foo0 !=0) {
     if(msg)
@@ -160,3 +154,109 @@ mmpa0 = function(
   return(1 + apply((t_mat+t0_mat)[-1,] > vf_cut, 2, sum))
 }
 
+
+#' Number of Assays Needed using Mini-Pooling with Algorithm
+#'
+#' Function \code{mpa0} calculates the number of assays, when using MPA, for
+#' pools that are formed following the order of individual samples in the data.
+#'
+#' For a given sample v_i, i = 1, ..., N, the first \code{K} samples are combined to
+#' form a pool, the next \code{K} samples are combined to form the second
+#' pool, and so on. If the number of samples for the last pool is less than
+#' \code{K}, these remaining samples are not used to form a pool (i.e.
+#' not included
+#' in the calculation) . Therefore, a total of
+#' \code{N\%/\%K} pools are formed. The function calculates the number of
+#' assays needed for each of these pools.
+#'
+#' @param v A vector of non-negative numerical assay results.
+#' @param K Pool size; default is \code{K = 5}.
+#' @param vf_cut Cutoff value for defining positive cases;
+#' default is \code{vf_cut = 1000}.
+#' @param lod A vector of lower limits of detection or a scalar if the limits are the
+#' same; default is \code{lod = 0}.
+#' @param msg Message generated during calculation; default is \code{TRUE}.
+#' @return
+#' A vectorof length \code{N\%/\%K} for the numbers of assays needed for all pools
+#' that are formed.
+#' @keywords mMPA.
+#' @seealso \link{mmpa}
+#' @export
+#' @examples
+#' K=5; n = 50;
+#' n.pool  = n/K; n.pool
+#' > [1] 10
+#' set.seed(100)
+#' pvl = rgamma(n, shape = 2.8, scale = 150)
+#' mpa0(v = pvl)
+#' > A total of 10 pools are formed.
+#' > The numbers of assays required by these pools are:
+#' > [1] 3 3 4 4 2 5 4 4 4 4
+#'
+mpa <- function(
+  v,
+  K = 5,
+  vf_cut = 1000,
+  lod = 0,
+  msg = T
+){
+  s = c(1:length(v))
+  mmpa0(v, s, K, vf_cut, lod, msg)
+}
+
+
+
+
+
+#' Number of Assays Needed using Mini-Pooling
+#'
+#' Function \code{minipool(...)} calculates the number of assays required, when
+#' using mini-pooling, for
+#' pools that are formed following the order that individual samples appear in the data.
+#'
+#' Suppose that N samples are collected for pooled testing, the first
+#' \code{K} samples are combined to
+#' form a pool, the next \code{K} samples are combined to form the second
+#' pool, and so on. If the number of samples for the last pool is less than
+#' \code{K}, these remaining samples are not used to form a pool (i.e.
+#' not included in the calculation). Therefore, a total of
+#' \code{N\%/\%K} pools are formed. The function calculates the number of
+#' assays needed for each of these pools. For mini-pooling, if a pool is
+#' negative, no further tests are needed and all samples in the pool
+#' are concluded as negative; so the total number of
+#' test required is one. Otherwise if the pool is tested positive, all
+#' individual samples in the pool are tested and the total number of assays
+#' required is (K + 1).
+#'
+#' @inheritParams mpa
+#'
+#' @return
+#' A vectorof length \code{N\%/\%K} for the numbers of assays needed for all pools
+#' that are formed.
+#' @keywords mMPA.
+#' @seealso \link{mpa}, \link{mmpa}, \link{pooling_mc}
+#' @export
+#' @examples
+#' K=5; n = 50;
+#' n.pool  = n/K; n.pool
+#' > [1] 10
+#' set.seed(100)
+#' pvl = rgamma(n, shape = 2.8, scale = 150)
+#' riskscore = (rank(pvl)/n) * 0.5 + runif(n) * 0.5
+#' mmpa0(v = pvl, s = riskscore)
+#' > A total of 10 pools are formed.
+#' > The numbers of assays required by these pools are:
+#' > [1] 6 6 6 6 6 6 6 6 6 6
+#'
+minipool <- function(
+  v,
+  K = 5,
+  vf_cut = 1000,
+  lod = 0,
+  msg = T
+){
+  s = c(1:length(v))
+  foo = mmpa(v, s, K, vf_cut, lod, msg)
+  foo[foo>1] = K+1
+  foo
+}
