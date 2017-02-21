@@ -99,3 +99,7 @@ boxplot(cbind(MP=apply(foo_mp, 2, mean),
 ```
 ![](fig/pooling_comp.png)
 
+## Contact
+
+Tao Liu, PhD
+tliu@stat.brown.edu
