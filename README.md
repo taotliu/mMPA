@@ -1,5 +1,5 @@
 # mMPA
-R package for implementing marker-assisted mini-pooling with algorithm (mMPA)
+An R package for implementing marker-assisted mini-pooling with algorithm (mMPA)
 
 ## Installation 
 
@@ -63,5 +63,5 @@ The average number of VL tests needed per individual is then calculated as `0.67
 ``` 
 So the average number of VL tests needed per 100 individuals (ATR) is estimated to be 67.  
 
-
+### Comparison with other pooling algorithm 
 
