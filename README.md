@@ -12,6 +12,8 @@ library(mMPA)
 
 ## Example 
 
+### Estimate the average number of assays required by mMPA 
+
 The following R code example demonstrates the use of the `mMPA` package. 
 
 Let us assume that blood samples of `n = 300` individuals are collected for HIV viral load (VL) testing. We simulate the results of VL tests using a Gamma (shape = 2.8, scale = 150) distribution, and generate the corresponding risk scores by adding a uniform random noise to the percentile of VL. The resulting VL has a median of `392` and an inter-quantile from `224` to `565`, and the resulting risk score has a Spearman’s correlation of `0.69` with the VL. 
