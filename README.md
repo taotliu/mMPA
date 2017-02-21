@@ -67,7 +67,7 @@ So the average number of VL tests needed per 100 individuals (ATR) is estimated 
 
 ### Comparison with other pooling algorithm 
 
-If we choose to use mini-pooling to carry out VL pooling, we need `1.19` assays per individual on average. 
+If we use mini-pooling (MP) for VL testing, we need `1.19` assay per individual on average. 
 
 ```R
 > foo_mp = pooling_mc(pvl, riskscore, perm_num = 100, method = "minipool")
@@ -79,7 +79,7 @@ If we choose to use mini-pooling to carry out VL pooling, we need `1.19` assays 
 > 
 ```
 
-If we choose to use MPA (May et al, 2010) to carry out VL pooling, we need `0.79` assays per individual on average. 
+If we use mini-pooling with algorithm (MPA) (c.f. May et al, 2010), we need `0.79` assay per individual on average. 
 
 ```R
 > foo_mpa = pooling_mc(pvl, riskscore, perm_num = 100, method = "mpa")
@@ -89,7 +89,7 @@ If we choose to use MPA (May et al, 2010) to carry out VL pooling, we need `0.79
 [1] 0.79
 ```
 
-Graphically  
+Graphically, the effeciencies of the three pooling algorithms are illustrated by the following plot. 
 
 ```R
 boxplot(cbind(MP=apply(foo_mp, 2, mean),
