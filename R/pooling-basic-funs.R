@@ -1,3 +1,5 @@
+
+
 #' Monte Carlo Simulation for Estimating the Number of Assays Required
 #' when Using Pooled Testing
 #'
@@ -37,8 +39,6 @@
 #' S = d$S # Risk Score
 #' mmpa(V, S, K = 3, perm_num = 3)
 #' foo; table(foo)
-
-
 pooling_mc = function(v, # vector of true VL
                 s = NULL, # vector of risk score in same length
                 K = 5, # pool size
