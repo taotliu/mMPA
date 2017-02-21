@@ -2,7 +2,7 @@
 % Please edit documentation in R/pooling-basic-funs.R
 \name{mpa}
 \alias{mpa}
-\title{Number of Assays Needed using Mini-Pooling with Algorithm}
+\title{Number of Assays Needed using Mini-Pooling with Algorithm (MPA)}
 \usage{
 mpa(v, K = 5, vf_cut = 1000, lod = 0, msg = T)
 }
@@ -24,18 +24,18 @@ A vectorof length \code{N\%/\%K} for the numbers of assays needed for all pools
 that are formed.
 }
 \description{
-Function \code{mpa0} calculates the number of assays, when using MPA, for
+Function \code{mpa(...)} calculates the number of assays required, when using MPA, for
 pools that are formed following the order of individual samples in the data.
 }
 \details{
-For a given sample v_i, i = 1, ..., N, the first \code{K} samples are combined to
-form a pool, the next \code{K} samples are combined to form the second
+For a given sample v_i, i = 1, ..., N, the first \code{K} samples v_1,
+..., v_5 are combined to form a pool, the next \code{K} samples v_6, ...,
+v_10 are combined to form the second
 pool, and so on. If the number of samples for the last pool is less than
 \code{K}, these remaining samples are not used to form a pool (i.e.
-not included
-in the calculation) . Therefore, a total of
+not included in the calculation) . Therefore, a total of
 \code{N\%/\%K} pools are formed. The function calculates the number of
-assays needed for each of these pools.
+assays needed for each of these pools. See May et al (2010).
 }
 \examples{
 K=5; n = 50;
@@ -43,13 +43,19 @@ n.pool  = n/K; n.pool
 > [1] 10
 set.seed(100)
 pvl = rgamma(n, shape = 2.8, scale = 150)
-mpa0(v = pvl)
+mpa(v = pvl)
 > A total of 10 pools are formed.
 > The numbers of assays required by these pools are:
 > [1] 3 3 4 4 2 5 4 4 4 4
 
 }
+\references{
+May, S., Gamst, A., Haubrich, R., Benson, C., & Smith,
+D. M. (2010). Pooled nucleic acid testing to identify antiretroviral
+treatment failure during HIV infection. Journal of acquired immune
+deficiency syndromes (1999), 53(2), 194.
+}
 \seealso{
-\link{mmpa}
+\link{minipool}, \link{mmpa}, \link{pooling_mc}
 }
 \keyword{mMPA.}

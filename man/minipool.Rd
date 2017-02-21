@@ -29,7 +29,7 @@ using mini-pooling, for
 pools that are formed following the order that individual samples appear in the data.
 }
 \details{
-Suppose that N samples are collected for pooled testing, the first
+Suppose that N samples are collected for pooled testing. The first
 \code{K} samples are combined to
 form a pool, the next \code{K} samples are combined to form the second
 pool, and so on. If the number of samples for the last pool is less than
@@ -38,10 +38,10 @@ not included in the calculation). Therefore, a total of
 \code{N\%/\%K} pools are formed. The function calculates the number of
 assays needed for each of these pools. For mini-pooling, if a pool is
 negative, no further tests are needed and all samples in the pool
-are concluded as negative; so the total number of
-test required is one. Otherwise if the pool is tested positive, all
+are concluded as being negative; so the total number of
+assays required is one. Otherwise if the pool is tested positive, all
 individual samples in the pool are tested and the total number of assays
-required is (K + 1).
+required is \code{(K + 1)}.
 }
 \examples{
 K=5; n = 50;
@@ -49,8 +49,7 @@ n.pool  = n/K; n.pool
 > [1] 10
 set.seed(100)
 pvl = rgamma(n, shape = 2.8, scale = 150)
-riskscore = (rank(pvl)/n) * 0.5 + runif(n) * 0.5
-mmpa0(v = pvl, s = riskscore)
+minipool(pvl)
 > A total of 10 pools are formed.
 > The numbers of assays required by these pools are:
 > [1] 6 6 6 6 6 6 6 6 6 6

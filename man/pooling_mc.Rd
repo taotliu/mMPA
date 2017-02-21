@@ -2,13 +2,29 @@
 % Please edit documentation in R/pooling-basic-funs.R
 \name{pooling_mc}
 \alias{pooling_mc}
-\title{Monte Carlo Simulation for Estimating the Number of Assays Needed
-when Using mMPA}
+\title{Monte Carlo Simulation for Estimating the Number of Assays Required
+when Using Pooled Testing}
 \usage{
-pooling_mc(v, s, K = 5, vf_cut = 1000, lod = 0, perm_num = 100,
-  msg = F)
+pooling_mc(v, s = NULL, K = 5, vf_cut = 1000, lod = 0,
+  method = "mmpa", perm_num = 100, msg = F)
 }
 \arguments{
+\item{v}{A vector of non-negative numerical assay results.}
+
+\item{s}{A vector of risk scores; \code{s} must be provided if \code{method = "mmpa"}
+and have the same length as \code{v}.}
+
+\item{K}{Pool size; default is \code{K = 5}.}
+
+\item{vf_cut}{Cutoff value for defining positive cases;
+default is \code{vf_cut = 1000}.}
+
+\item{lod}{A vector of lower limits of detection or a scalar if the limits are the
+same; default is \code{lod = 0}.}
+
+\item{method}{Method that is used for pooled testing; must be one of \code{minipool},
+\code{mpa}, and \code{mmpa}. By default, \code{method = "mmpa"}.}
+
 \item{perm_num}{The number of permutation to be used for the calculation;
 default is \code{100}.}
 
@@ -16,26 +32,24 @@ default is \code{100}.}
 }
 \value{
 The outcome is a matrix of dimension \code{num_pool} by \code{perm_num}.
-The row number is the number of pools (\code{num_pool}) for each permutation,
-which is
+The row number is the number of pools (\code{num_pool}) from each permutation
+of the data, which is
 determined by the sample size \code{N} and pool size \code{K}; \code{num_pool
 = N\%/\%K}. The column number is the number of
 permutations (\code{num_pool}).
 }
 \description{
-This function uses Monte Carlo to simulate different orders in
+This function uses Monte Carlo (MC) to simulate different orders in
 which the samples would be collected to form pools. Unlike the
-function \code{mmpa0} which calculates the number of assays
+function \code{minipool}, \code{mpa}, and \code{mmpa} that calculate
+the number of assays
 needed for pools that are formed following the exact order
-of the samples that are listed in the data, the function
-\code{mmp} permutes the data many (\code{perm_num}) times
-and thus can be used to estimate the average number of
-assays required (ATR) per individual without depending on a
-specific configuration of forming pools. To obtain a reliable
-estimate of ATR, a large number of \code{perm_num} should be used.
-}
-\details{
-See \link{mmpa0} for detail descriptions
+of the samples that are listed in the data, this function
+\code{pooling_mc} permutes the data many (\code{perm_num}) times
+so as to estimate the average number of
+assays required (ATR) per individual. Using MC avoids the dependence
+on any
+specific ordering of forming pools.
 }
 \examples{
 d = Simdata
@@ -45,6 +59,6 @@ mmpa(V, S, K = 3, perm_num = 3)
 foo; table(foo)
 }
 \seealso{
-\link{mmpa0}
+\link{minipool}, \link{mpa}, \link{mmpa}
 }
 \keyword{Pooling.}

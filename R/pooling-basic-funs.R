@@ -1,33 +1,36 @@
-#' Monte Carlo Simulation for Estimating the Number of Assays Needed
-#' when Using mMPA
+#' Monte Carlo Simulation for Estimating the Number of Assays Required
+#' when Using Pooled Testing
 #'
-#' This function uses Monte Carlo to simulate different orders in
+#' This function uses Monte Carlo (MC) to simulate different orders in
 #' which the samples would be collected to form pools. Unlike the
-#' function \code{mmpa0} which calculates the number of assays
+#' function \code{minipool}, \code{mpa}, and \code{mmpa} that calculate
+#' the number of assays
 #' needed for pools that are formed following the exact order
-#' of the samples that are listed in the data, the function
-#' \code{mmp} permutes the data many (\code{perm_num}) times
-#' and thus can be used to estimate the average number of
-#' assays required (ATR) per individual without depending on a
-#' specific configuration of forming pools. To obtain a reliable
-#' estimate of ATR, a large number of \code{perm_num} should be used.
+#' of the samples that are listed in the data, this function
+#' \code{pooling_mc} permutes the data many (\code{perm_num}) times
+#' so as to estimate the average number of
+#' assays required (ATR) per individual. Using MC avoids the dependence
+#' on any
+#' specific ordering of forming pools.
 #'
-#' See \link{mmpa0} for detail descriptions
-#'
-#' @inheritParams mmpa0
+#' @inheritParams minipool
+#' @param s A vector of risk scores; \code{s} must be provided if \code{method = "mmpa"}
+#' and have the same length as \code{v}.
+#' @param method Method that is used for pooled testing; must be one of \code{minipool},
+#' \code{mpa}, and \code{mmpa}. By default, \code{method = "mmpa"}.
 #' @param perm_num The number of permutation to be used for the calculation;
 #' default is \code{100}.
 #' @param msg Message generated during calculation; default is \code{FALSE}.
 #' @return
 #' The outcome is a matrix of dimension \code{num_pool} by \code{perm_num}.
-#' The row number is the number of pools (\code{num_pool}) for each permutation,
-#' which is
+#' The row number is the number of pools (\code{num_pool}) from each permutation
+#' of the data, which is
 #' determined by the sample size \code{N} and pool size \code{K}; \code{num_pool
 #' = N\%/\%K}. The column number is the number of
 #' permutations (\code{num_pool}).
 #' @keywords Pooling.
 #' @export
-#' @seealso \link{mmpa0}
+#' @seealso \link{minipool}, \link{mpa}, \link{mmpa}
 #' @examples
 #' d = Simdata
 #' V = d$VL # Viral Load
@@ -37,10 +40,11 @@
 
 
 pooling_mc = function(v, # vector of true VL
-                s, # vector of risk score in same length
+                s = NULL, # vector of risk score in same length
                 K = 5, # pool size
                 vf_cut = 1000, # cutoff for individual viral failure
                 lod = 0, # vector of true VL of those undetectable
+                method = "mmpa",
                 perm_num = 100,
                 msg = F
 ){
@@ -55,7 +59,16 @@ pooling_mc = function(v, # vector of true VL
   ###########################
   v0 = v[permindex]
   s0 = s[permindex]
-  impafoo = mmpa0(v0, s0, K, vf_cut, lod, msg = msg)
+  if(method == "mmpa"){
+    impafoo = mmpa(v0, s0, K, vf_cut, lod, msg = msg)
+  } else if(method == "mpa"){
+    impafoo = mpa(v0, K, vf_cut, lod, msg = msg)
+  } else if(method == "minipool") {
+    impafoo = minipool(v0, K, vf_cut, lod, msg = msg)
+  } else {
+    stop("The function argument method must be one of minipool, mpa, and mmpa.")
+  }
+
   if(msg) cat("For pool size of", K, "the average number of assays needed per pool is",
               mean(impafoo), ", \ni.e. average number of assays per subject is",
               mean(impafoo)/K, ".")
@@ -67,9 +80,11 @@ pooling_mc = function(v, # vector of true VL
 
 
 
-#' Number of Assays Needed using Marker-Assisted Mini-Pooling with Algorithm
+#' Number of Assays Required using Marker-Assisted Mini-Pooling with Algorithm
+#' (mMPA)
 #'
-#' Function \code{mmpa0} calculates the number of assays, when using mMPA, for
+#' Function \code{mmpa(...)} calculates the number of assays required, when
+#' using mMPA, for
 #' pools that are formed following the order of individual samples in the data.
 #'
 #' For a given sample (v_i, s_i), i = 1, ..., N, the first \code{K} samples are combined to
@@ -81,15 +96,17 @@ pooling_mc = function(v, # vector of true VL
 #' \code{N\%/\%K} pools are formed. The function calculates the number of
 #' assays needed for each of these pools.
 #'
-#' @inheritParams mpa0
-#' @param s A vector of risk scores; \code{v} and \code{s} must have the same
-#' length.
+#' @references Our manuscript (under review);  to be added.
+#'
+#' @inheritParams mpa
+#' @param s A vector of risk scores; \code{s} must have the same
+#' length as \code{v}.
 #'
 #' @return
 #' A vectorof length \code{N\%/\%K} for the numbers of assays needed for all pools
 #' that are formed.
 #' @keywords mMPA.
-#' @seealso \link{mmpa}
+#' @seealso \link{minipool}, \link{mpa}, \link{pooling_mc}
 #' @export
 #' @examples
 #' K=5; n = 50;
@@ -98,7 +115,7 @@ pooling_mc = function(v, # vector of true VL
 #' set.seed(100)
 #' pvl = rgamma(n, shape = 2.8, scale = 150)
 #' riskscore = (rank(pvl)/n) * 0.5 + runif(n) * 0.5
-#' mmpa0(v = pvl, s = riskscore)
+#' mmpa(v = pvl, s = riskscore)
 #' > A total of 10 pools are formed.
 #' > The numbers of assays required by these pools are:
 #' > [1] 3 3 4 4 2 3 3 4 3 3
@@ -155,19 +172,24 @@ mmpa = function(
 }
 
 
-#' Number of Assays Needed using Mini-Pooling with Algorithm
+#' Number of Assays Needed using Mini-Pooling with Algorithm (MPA)
 #'
-#' Function \code{mpa0} calculates the number of assays, when using MPA, for
+#' Function \code{mpa(...)} calculates the number of assays required, when using MPA, for
 #' pools that are formed following the order of individual samples in the data.
 #'
-#' For a given sample v_i, i = 1, ..., N, the first \code{K} samples are combined to
-#' form a pool, the next \code{K} samples are combined to form the second
+#' For a given sample v_i, i = 1, ..., N, the first \code{K} samples v_1,
+#' ..., v_5 are combined to form a pool, the next \code{K} samples v_6, ...,
+#' v_10 are combined to form the second
 #' pool, and so on. If the number of samples for the last pool is less than
 #' \code{K}, these remaining samples are not used to form a pool (i.e.
-#' not included
-#' in the calculation) . Therefore, a total of
+#' not included in the calculation) . Therefore, a total of
 #' \code{N\%/\%K} pools are formed. The function calculates the number of
-#' assays needed for each of these pools.
+#' assays needed for each of these pools. See May et al (2010).
+#'
+#' @references May, S., Gamst, A., Haubrich, R., Benson, C., & Smith,
+#' D. M. (2010). Pooled nucleic acid testing to identify antiretroviral
+#' treatment failure during HIV infection. Journal of acquired immune
+#' deficiency syndromes (1999), 53(2), 194.
 #'
 #' @param v A vector of non-negative numerical assay results.
 #' @param K Pool size; default is \code{K = 5}.
@@ -180,7 +202,7 @@ mmpa = function(
 #' A vectorof length \code{N\%/\%K} for the numbers of assays needed for all pools
 #' that are formed.
 #' @keywords mMPA.
-#' @seealso \link{mmpa}
+#' @seealso \link{minipool}, \link{mmpa}, \link{pooling_mc}
 #' @export
 #' @examples
 #' K=5; n = 50;
@@ -188,7 +210,7 @@ mmpa = function(
 #' > [1] 10
 #' set.seed(100)
 #' pvl = rgamma(n, shape = 2.8, scale = 150)
-#' mpa0(v = pvl)
+#' mpa(v = pvl)
 #' > A total of 10 pools are formed.
 #' > The numbers of assays required by these pools are:
 #' > [1] 3 3 4 4 2 5 4 4 4 4
@@ -201,7 +223,7 @@ mpa <- function(
   msg = T
 ){
   s = c(1:length(v))
-  mmpa0(v, s, K, vf_cut, lod, msg)
+  mmpa(v, s, K, vf_cut, lod, msg)
 }
 
 
@@ -214,7 +236,7 @@ mpa <- function(
 #' using mini-pooling, for
 #' pools that are formed following the order that individual samples appear in the data.
 #'
-#' Suppose that N samples are collected for pooled testing, the first
+#' Suppose that N samples are collected for pooled testing. The first
 #' \code{K} samples are combined to
 #' form a pool, the next \code{K} samples are combined to form the second
 #' pool, and so on. If the number of samples for the last pool is less than
@@ -223,10 +245,10 @@ mpa <- function(
 #' \code{N\%/\%K} pools are formed. The function calculates the number of
 #' assays needed for each of these pools. For mini-pooling, if a pool is
 #' negative, no further tests are needed and all samples in the pool
-#' are concluded as negative; so the total number of
-#' test required is one. Otherwise if the pool is tested positive, all
+#' are concluded as being negative; so the total number of
+#' assays required is one. Otherwise if the pool is tested positive, all
 #' individual samples in the pool are tested and the total number of assays
-#' required is (K + 1).
+#' required is \code{(K + 1)}.
 #'
 #' @inheritParams mpa
 #'
@@ -242,8 +264,7 @@ mpa <- function(
 #' > [1] 10
 #' set.seed(100)
 #' pvl = rgamma(n, shape = 2.8, scale = 150)
-#' riskscore = (rank(pvl)/n) * 0.5 + runif(n) * 0.5
-#' mmpa0(v = pvl, s = riskscore)
+#' minipool(pvl)
 #' > A total of 10 pools are formed.
 #' > The numbers of assays required by these pools are:
 #' > [1] 6 6 6 6 6 6 6 6 6 6

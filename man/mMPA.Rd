@@ -2,20 +2,34 @@
 % Please edit documentation in R/pooling-basic-funs.R
 \name{mmpa}
 \alias{mmpa}
-\title{Number of Assays Needed using Marker-Assisted Mini-Pooling with Algorithm}
+\title{Number of Assays Required using Marker-Assisted Mini-Pooling with Algorithm
+(mMPA)}
 \usage{
 mmpa(v, s, K = 5, vf_cut = 1000, lod = 0, msg = T)
 }
 \arguments{
-\item{s}{A vector of risk scores; \code{v} and \code{s} must have the same
-length.}
+\item{v}{A vector of non-negative numerical assay results.}
+
+\item{s}{A vector of risk scores; \code{s} must have the same
+length as \code{v}.}
+
+\item{K}{Pool size; default is \code{K = 5}.}
+
+\item{vf_cut}{Cutoff value for defining positive cases;
+default is \code{vf_cut = 1000}.}
+
+\item{lod}{A vector of lower limits of detection or a scalar if the limits are the
+same; default is \code{lod = 0}.}
+
+\item{msg}{Message generated during calculation; default is \code{TRUE}.}
 }
 \value{
 A vectorof length \code{N\%/\%K} for the numbers of assays needed for all pools
 that are formed.
 }
 \description{
-Function \code{mmpa0} calculates the number of assays, when using mMPA, for
+Function \code{mmpa(...)} calculates the number of assays required, when
+using mMPA, for
 pools that are formed following the order of individual samples in the data.
 }
 \details{
@@ -35,13 +49,16 @@ n.pool  = n/K; n.pool
 set.seed(100)
 pvl = rgamma(n, shape = 2.8, scale = 150)
 riskscore = (rank(pvl)/n) * 0.5 + runif(n) * 0.5
-mmpa0(v = pvl, s = riskscore)
+mmpa(v = pvl, s = riskscore)
 > A total of 10 pools are formed.
 > The numbers of assays required by these pools are:
 > [1] 3 3 4 4 2 3 3 4 3 3
 
 }
+\references{
+Our manuscript (under review);  to be added.
+}
 \seealso{
-\link{mmpa}
+\link{minipool}, \link{mpa}, \link{pooling_mc}
 }
 \keyword{mMPA.}
