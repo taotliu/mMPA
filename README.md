@@ -54,12 +54,12 @@ The average number of VL tests needed per pool is then calculated to be `3.35`.
  [1] 3.35
 ```
 
-The average number of VL tests needed per individual is `0.67`.
+The average number of VL tests needed per individual is then calculated as `0.67`.
 ```R
 > mean(foo)/K
  [1] 0.67
 ``` 
-So the average number of VL tests needed per 100 individuals (ATR) is 67.  
+So the average number of VL tests needed per 100 individuals (ATR) is estimated to be 67.  
 
 
 
