@@ -72,8 +72,10 @@
 #'   [71] 3.23 3.33 3.23 3.42 3.32 3.32 3.45 3.35 3.32 3.32 3.33 3.33 3.30 3.38
 #'   [85] 3.37 3.33 3.33 3.20 3.37 3.33 3.30 3.40 3.40 3.32 3.33 3.37 3.40 3.38
 #'   [99] 3.30 3.33
+#' ### Estimated average number of assays needed per pool
 #' mean(foo)
 #'  > 3.35
+#' ### Estimated average number of assays needed per individual
 #' mean(foo)/K
 #'  > [1] 0.67
 pooling_mc = function(v, # vector of true VL
