@@ -1,5 +1,6 @@
 Tasks for mMPA R package
 
+* TODO understand @keyword, @export
 * TODO Update vignette
 * TODO Update R/mMPA.R; add description
 * WAIT publish at CRAN
