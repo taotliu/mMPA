@@ -1,5 +1,3 @@
-
-
 #' Monte Carlo Simulation for Estimating the Number of Assays Required
 #' when Using Pooled Testing
 #'
