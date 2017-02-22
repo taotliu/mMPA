@@ -29,14 +29,53 @@
 #' = N\%/\%K}. The column number is the number of
 #' permutations (\code{num_pool}).
 #' @keywords Pooling.
+#' @references
+#' Bilder CR, Tebbs JM, Chen P. Informative retesting. Journal of the American
+#' Statistical Association. 2010;105(491):942-955.
+#'
+#' May S, Gamst A, Haubrich R, Benson C, Smith DM. Pooled nucleic acid testing to
+#' identify antiretroviral treatment failure during HIV infection. Journal of Acquired
+#' Immune Deficiency Syndromes. 2010;53(2):194-201.
+#'
+#' Dorfman R. The detection of defective members of large populations. The
+#' Annals of Mathematical Statistics. 1943;14(4):436-440.
+#'
+#' Our manuscript; to be added.
 #' @export
 #' @seealso \link{minipool}, \link{mpa}, \link{mmpa}
 #' @examples
-#' d = Simdata
-#' V = d$VL # Viral Load
-#' S = d$S # Risk Score
-#' mmpa(V, S, K = 3, perm_num = 3)
-#' foo; table(foo)
+#' ### sample size = 300
+#' n = 300;
+#' set.seed(100)
+#' pvl = rgamma(n, shape = 2.8, scale = 150)
+#' summary(pvl)
+#'  >  Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+#'  >  53      225      392     424    564    1373
+#'
+#' riskscore = (rank(pvl)/n) * 0.5 + runif(n) * 0.5
+#' cor(pvl, riskscore, method = "spearman")
+#'  > [1] 0.69
+#' ### Pool size K is set to 5
+#' K=5;
+#' ### so, the number of pools = 60
+#' n.pool  = n/K; n.pool
+#'  > [1] 60
+#' foo = pooling_mc(pvl, riskscore, perm_num = 100)
+#' ### Average number of assays needed per pool for each of the 100
+#' ### permutations of the data
+#' apply(foo, 2, mean)
+#'  >[1] 3.43 3.33 3.35 3.47 3.37 3.33 3.37 3.27 3.43 3.28 3.32 3.35 3.35 3.37
+#'   [15] 3.38 3.37 3.30 3.43 3.28 3.38 3.42 3.35 3.35 3.48 3.30 3.47 3.40 3.35
+#'   [29] 3.25 3.30 3.38 3.43 3.25 3.45 3.35 3.33 3.42 3.38 3.40 3.33 3.32 3.38
+#'   [43] 3.33 3.37 3.37 3.33 3.35 3.38 3.38 3.30 3.30 3.33 3.37 3.32 3.30 3.40
+#'   [57] 3.37 3.42 3.30 3.37 3.38 3.32 3.45 3.38 3.37 3.50 3.33 3.40 3.28 3.37
+#'   [71] 3.23 3.33 3.23 3.42 3.32 3.32 3.45 3.35 3.32 3.32 3.33 3.33 3.30 3.38
+#'   [85] 3.37 3.33 3.33 3.20 3.37 3.33 3.30 3.40 3.40 3.32 3.33 3.37 3.40 3.38
+#'   [99] 3.30 3.33
+#' mean(foo)
+#'  > 3.35
+#' mean(foo)/K
+#'  > [1] 0.67
 pooling_mc = function(v, # vector of true VL
                 s = NULL, # vector of risk score in same length
                 K = 5, # pool size
@@ -94,7 +133,16 @@ pooling_mc = function(v, # vector of true VL
 #' \code{N\%/\%K} pools are formed. The function calculates the number of
 #' assays needed for each of these pools.
 #'
-#' @references Our manuscript (under review);  to be added.
+#' @references
+#'
+#' Bilder CR, Tebbs JM, Chen P. Informative retesting. Journal of the American
+#' Statistical Association. 2010;105(491):942-955.
+#'
+#' May S, Gamst A, Haubrich R, Benson C, Smith DM. Pooled nucleic acid testing
+#' to identify antiretroviral treatment failure during HIV infection. Journal
+#' of Acquired Immune Deficiency Syndromes. 2010;53(2):194-201.
+#'
+#' Our manuscript (under review);  to be added.
 #'
 #' @inheritParams mpa
 #' @param s A vector of risk scores; \code{s} must have the same
@@ -253,7 +301,10 @@ mpa <- function(
 #' @return
 #' A vectorof length \code{N\%/\%K} for the numbers of assays needed for all pools
 #' that are formed.
-#' @keywords mMPA.
+#' @keywords mini-pooling.
+#' @references
+#' Dorfman R. The detection of defective members of large populations. The
+#' Annals of Mathematical Statistics. 1943;14(4):436-440.
 #' @seealso \link{mpa}, \link{mmpa}, \link{pooling_mc}
 #' @export
 #' @examples

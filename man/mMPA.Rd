@@ -56,6 +56,13 @@ mmpa(v = pvl, s = riskscore)
 
 }
 \references{
+Bilder CR, Tebbs JM, Chen P. Informative retesting. Journal of the American
+Statistical Association. 2010;105(491):942-955.
+
+May S, Gamst A, Haubrich R, Benson C, Smith DM. Pooled nucleic acid testing
+to identify antiretroviral treatment failure during HIV infection. Journal
+of Acquired Immune Deficiency Syndromes. 2010;53(2):194-201.
+
 Our manuscript (under review);  to be added.
 }
 \seealso{

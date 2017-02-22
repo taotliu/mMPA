@@ -55,7 +55,11 @@ minipool(pvl)
 > [1] 6 6 6 6 6 6 6 6 6 6
 
 }
+\references{
+Dorfman R. The detection of defective members of large populations. The
+Annals of Mathematical Statistics. 1943;14(4):436-440.
+}
 \seealso{
 \link{mpa}, \link{mmpa}, \link{pooling_mc}
 }
-\keyword{mMPA.}
+\keyword{mini-pooling.}
