@@ -1,0 +1,5 @@
+Tasks for mMPA R package
+
+* TODO Update vignette
+* TODO Update R/mMPA.R; add description
+* WAIT publish at CRAN
