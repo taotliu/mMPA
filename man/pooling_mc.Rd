@@ -12,8 +12,8 @@ pooling_mc(v, s = NULL, K = 5, vf_cut = 1000, lod = 0,
 \item{v}{A vector of non-negative numerical assay results.}
 
 \item{s}{A vector of risk scores; \code{s} must be provided if \code{method = "mmpa"}
-and have the same length as \code{v}. The risk score \code{s} needs to be positively associated with \code{v};
-othewise an error message will be generated.}
+and have the same length as \code{v}. The risk score \code{s} needs to be positively
+associated with \code{v}; othewise an error message will be generated.}
 
 \item{K}{Pool size; default is \code{K = 5}.}
 

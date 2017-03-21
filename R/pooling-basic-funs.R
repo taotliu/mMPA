@@ -13,10 +13,10 @@
 #' on any
 #' specific ordering of forming pools.
 #'
-#' @inheritParams minipool
+#' @inheritParams mmpa
 #' @param s A vector of risk scores; \code{s} must be provided if \code{method = "mmpa"}
-#' and have the same length as \code{v}. The risk score \code{s} needs to be positively associated with \code{v};
-#' othewise an error message will be generated.
+#' and have the same length as \code{v}. The risk score \code{s} needs to be positively
+#' associated with \code{v}; othewise an error message will be generated.
 #' @param method Method that is used for pooled testing; must be one of \code{minipool},
 #' \code{mpa}, and \code{mmpa}. By default, \code{method = "mmpa"}.
 #' @param perm_num The number of permutation to be used for the calculation;
@@ -149,7 +149,8 @@ pooling_mc = function(v, # vector of true VL
 #'
 #' @inheritParams mpa
 #' @param s A vector of risk scores; \code{s} must have the same
-#' length as \code{v}.
+#' length as \code{v}. The risk score \code{s} needs to be positively
+#' associated with \code{v}; othewise an error message will be generated.
 #'
 #' @return
 #' A vectorof length \code{N\%/\%K} for the numbers of assays needed for all pools
