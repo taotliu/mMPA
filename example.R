@@ -31,3 +31,27 @@ boxplot(cbind(MP=apply(foo_mp, 2, mean),
         ylab = "Average number of assays required per 100 individuals")
 
 
+n_bt = 500
+bt_result = matrix(NA, nrow = n_bt, ncol = 3)
+
+for(i in 1:n_bt){
+  cat(i, "\t")
+  bt_index = sample(size = n, x = 1:n, replace = T)
+  bt_pvl = pvl[bt_index]
+  bt_riskscore = riskscore[bt_index]
+
+  bt_result[i, 1] = mean(pooling_mc(bt_pvl, bt_riskscore, perm_num = 100, method = "minipool"))/K*100
+  bt_result[i, 2] = mean(pooling_mc(bt_pvl, bt_riskscore, perm_num = 100, method = "mpa"))/K*100
+  bt_result[i, 3] = mean(pooling_mc(bt_pvl, bt_riskscore, perm_num = 100, method = "mmpa"))/K*100
+}
+
+summary(bt_result)
+
+ci_foo = function(x) quantile(x, probs = c(0.025, 0.975))
+
+apply(bt_result, 2, ci_foo)
+
+
+
+
+
