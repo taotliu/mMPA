@@ -11,7 +11,8 @@ mmpa(v, s, K = 5, vf_cut = 1000, lod = 0, msg = T)
 \item{v}{A vector of non-negative numerical assay results.}
 
 \item{s}{A vector of risk scores; \code{s} must have the same
-length as \code{v}.}
+length as \code{v}. The risk score \code{s} needs to be positively
+associated with \code{v}; othewise an error message will be generated.}
 
 \item{K}{Pool size; default is \code{K = 5}.}
 
