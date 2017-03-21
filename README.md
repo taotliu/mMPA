@@ -64,9 +64,9 @@ The average number of VL tests needed per individual is then calculated as `0.67
 ``` 
 So the Average number of VL Tests Required per 100 individuals (ATR) is estimated to be 67.  
 
-### Comparison with other pooling algorithm 
+### Comparison with other pooling algorithms
 
-If we use mini-pooling (MP) for VL testing, we need an average of `1.19` assays for each individual. 
+If we use mini-pooling (MP) for VL testing, we need an average of `1.192` assays for each individual. 
 
 ```R
 > foo_mp = pooling_mc(pvl, riskscore, perm_num = 100, method = "minipool")
@@ -74,7 +74,7 @@ If we use mini-pooling (MP) for VL testing, we need an average of `1.19` assays 
 [1] 5.96
 
 > mean(foo_mp)/K
-[1] 1.19
+[1] 1.192
 > 
 ```
 
@@ -88,7 +88,7 @@ If we use mini-pooling with algorithm (MPA) (c.f. May et al, 2010), we need `0.7
 [1] 0.79
 ```
 
-Graphically, the efficiency of the three pooling algorithms is illustrated by the following graph. 
+The ATRs for MP, MPA, and mMPA are 119, 79, and 67, respectively. Graphically, the efficiency of the three pooling algorithms is illustrated by the following graph. 
 
 ```R
 boxplot(cbind(MP=apply(foo_mp, 2, mean),
@@ -97,6 +97,50 @@ boxplot(cbind(MP=apply(foo_mp, 2, mean),
         ylab = "Average number of assays required per 100 individuals")
 ```
 ![](fig/pooling_comp.png)
+
+### Calculation of 95% confidence interval using bootstrap
+
+Above we use Monte Carlo simulation (with `100` permutations) to obtain a point estimate of ATR for each of the three pooling methods. It is a "point" estimate because all permutations are carried out on one sample, and not taking into account the sampling variability. In the following, we provide a code example to illustrate how to use the bootstrap method to calculate the 95% confidence intervals for the estimated ATRs. 
+
+```R
+### we use 500 bootstrap resamples ###
+> n_bt = 500
+
+### For each bootstrap resample, we use Monte Carlo simulation to 
+### estimate the ATR for each pooling method. The results are saved 
+### in a 500x3 matrix. 
+> bt_result = matrix(NA, nrow = n_bt, ncol = 3)
+
+> for(i in 1:n_bt){
++   bt_index = sample(size = n, x = 1:n, replace = T)
++   bt_pvl = pvl[bt_index]
++   bt_riskscore = riskscore[bt_index]
++
++   ### bt_pvl is a bootstrap sample of PVL; the corresponding risk is bt_riskscore
++   bt_result[i, 1] = mean(pooling_mc(bt_pvl, bt_riskscore, perm_num = 100, method = "minipool"))/K*100
++   bt_result[i, 2] = mean(pooling_mc(bt_pvl, bt_riskscore, perm_num = 100, method = "mpa"))/K*100
++   bt_result[i, 3] = mean(pooling_mc(bt_pvl, bt_riskscore, perm_num = 100, method = "mmpa"))/K*100
++ }
+```
+
+In the following, we define a function called `ci_foo()` to calculate 2.5% and 97.5% tiles.  
+```R
+> ci_foo = function(x) quantile(x, probs = c(0.025, 0.975))
+> apply(bt_result, 2, ci_foo)
+          [,1]      [,2]      [,3]
+2.5%  118.2737  75.47583  63.10633
+97.5% 119.6833  82.05275  70.74525
+```
+
+The 95% confidence intervals are shown in the following table. So for this simulated data set, mMPA requires significantly less VL assays than direct individual testing (IND) and pooled testing using MP and MPA.  
+
+| Method  |  ATR  |     95% CI     |
+|---------|:-----:|:--------------:|
+| IND     |  100  |       ---      |
+| MP      | 119.2 | (118.3, 119.7) |
+| MPA     |   79  |    (75, 82)    |
+| mMPA    |   67  |    (63, 71)    |
+
 
 ## Contact
 
