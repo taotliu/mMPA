@@ -132,7 +132,7 @@ In the following, we define a function called `ci_foo()` to calculate 2.5% and 9
 97.5% 119.6833  82.05275  70.74525
 ```
 
-The 95% confidence intervals are shown in the following table. So for this simulated data set, mMPA requires significantly less VL assays than direct individual testing (IND) and pooled testing using MP and MPA.  
+The 95% confidence intervals are shown in the following table. So for this simulated data set, mMPA requires significantly less VL assays than direct individual testing (IND) and pooled testing using MP and MPA.   
 
 | Method  |  ATR  |     95% CI     |
 |---------|:-----:|:--------------:|
