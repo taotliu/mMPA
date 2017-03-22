@@ -94,7 +94,7 @@ The ATRs for MP, MPA, and mMPA are 119, 79, and 67, respectively. Graphically, t
 boxplot(cbind(MP=apply(foo_mp, 2, mean),
               MPA=apply(foo_mpa, 2, mean),
               mMPA=apply(foo, 2, mean))/K*100,
-        ylab = "Average number of assays required per 100 individuals")
+        ylab = "Number of assays required per 100 individuals")
 ```
 ![](fig/pooling_comp.png)
 

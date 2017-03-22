@@ -1,4 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^example\.R$
-^mMPA\_todo.org$
+^mMPA\_todo\.org$
+^fig$
+^README\.md$
+^\.gitignore$
