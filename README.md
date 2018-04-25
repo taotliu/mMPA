@@ -1,5 +1,7 @@
 # mMPA
-An R package for implementing marker-assisted mini-pooling with algorithm (mMPA)
+An R package for implementing marker-assisted mini-pooling with algorithm (mMPA). 
+
+REF: Liu T, Hogan JW, Daniels MJ, Coetzer M, Xu Y, Bove G, DeLong AK, Ledingham L, Orido M, Diero L, Kantor R. (2017). "Improved HIV-1 viral load monitoring capacity using pooled testing with marker-assisted deconvolution." *J Acquir Immune Defic Syndr* 75(5):580-587. doi: 10.1097/QAI.0000000000001424.
 
 ## Installation 
 
